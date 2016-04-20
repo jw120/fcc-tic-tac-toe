@@ -83,6 +83,9 @@ toList = Dict.toList
 addPiece : Square -> Piece -> Board -> Board
 addPiece = Dict.insert
 
+getPiece : Square -> Board -> Maybe Piece
+getPiece = Dict.get
+
 
 
 -- Helper functions for board lookup
@@ -108,32 +111,29 @@ isFull board =
     |> not
 
 -- Is the specified line taken (i.e., all three squares have the same piece)
-isLine : Line -> Maybe Piece
-isLine line =
-  Nothing
-
+isLine : Line -> Board -> Maybe Piece
+isLine (l1, l2, l3) b =
+  let
+    p1 = getPiece l1 b
+    p2 = getPiece l2 b
+    p3 = getPiece l3 b
+  in
+    if p1 == p2 && p2 == p3 then
+      p1
+    else
+      Nothing
 
 -- Does the board have a complete line
 hasLine : Board -> Maybe (Piece, Line)
 hasLine board =
-  Nothing -- TBD
-
-  {-
   let
-    isLine' : Line -> Maybe (Line, Piece)
-    isLine' line = Maybe.map (\result -> (line, result)) (isLine line)
-    possibleLines : List (Line, Piece)
-    possibleLines = List.filterMap boardLines
+    isLine' : Line -> Maybe (Piece, Line)
+    isLine' l =
+      isLine l board
+        |> Maybe.map (\p -> (p, l))
   in
-    case possibleLines of
-    [(piece, line)] ->
-      Just (piece, line)
-
-    _ ->
-      Nothing
--}
-
-
+    List.filterMap isLine' boardLines
+      |> List.head
 
 
 -- Which squares are empty
