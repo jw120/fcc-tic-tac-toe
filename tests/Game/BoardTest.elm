@@ -1,8 +1,8 @@
-module Game.BoardTest where
+module Game.BoardTest (testSuite) where
 
 import Game.Board as GB exposing (Board, Piece(..), Square)
 
-import Graphics.Element exposing (Element)
+-- import Graphics.Element exposing (Element)
 import ElmTest exposing (..)
 
 
@@ -11,8 +11,8 @@ assertBoardEqual : Board -> Board -> Assertion
 assertBoardEqual b1 b2 =
     assertEqual (GB.toList b1) (GB.toList b2)
 
-tests : Test
-tests =
+testSuite : Test
+testSuite =
     let
         b0 = GB.fromList []
         x1 = GB.fromList [(3, X)]
@@ -77,6 +77,6 @@ tests =
               ]
             ]
 
-main : Element
-main =
-    elementRunner tests
+-- main : Element
+-- main =
+--     elementRunner tests
