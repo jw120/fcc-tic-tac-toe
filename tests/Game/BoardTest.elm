@@ -1,9 +1,9 @@
-module Game.BoardTest (testSuite) where
+module Game.BoardTest (allTests) where
+
+import ElmTest exposing (..)
 
 import Game.Board as GB exposing (Board, Piece(..), Square)
 
--- import Graphics.Element exposing (Element)
-import ElmTest exposing (..)
 
 
 -- Avoid using == on Dicts
@@ -11,8 +11,8 @@ assertBoardEqual : Board -> Board -> Assertion
 assertBoardEqual b1 b2 =
     assertEqual (GB.toList b1) (GB.toList b2)
 
-testSuite : Test
-testSuite =
+allTests : Test
+allTests =
     let
         b0 = GB.fromList []
         x1 = GB.fromList [(3, X)]
@@ -24,17 +24,16 @@ testSuite =
         d9 = GB.fromList [(1, X), (2, O), (3, X), (4, O), (5, O), (6, X), (7, O), (8, X), (9, O)]
         x9 = GB.fromList [(1, X), (2, O), (3, X), (4, O), (5, X), (6, O), (7, O), (8, O), (9, X)]
         o9 = GB.fromList [(1, O), (2, O), (3, X), (4, O), (5, X), (6, O), (7, O), (8, X), (9, X)]
-
     in
         suite
             "Board - helper functions"
              [ suite "emptyBoard"
-                [ test "Empty board" <| GB.emptyBoard `assertBoardEqual` b0
+                [ test "Empty board" <| assertBoardEqual b0 <| GB.emptyBoard
                 ]
             , suite "addPiece"
-                [ test "First add" <| (GB.addPiece 3 X GB.emptyBoard) `assertBoardEqual` x1
-                , test "Second add" <| (GB.addPiece 5 O x1) `assertBoardEqual` b2
-                , test "Replace"  <| (GB.addPiece 3 O x1) `assertBoardEqual` o1
+                [ test "First add" <| assertBoardEqual x1 <| GB.addPiece 3 X GB.emptyBoard
+                , test "Second add" <| assertBoardEqual b2 <| GB.addPiece 5 O x1
+                , test "Replace"  <| assertBoardEqual o1 <| GB.addPiece 3 O x1
                 ]
             , suite "isPiece"
                 [ test "Empty cell" <| assert <| not <| GB.isPiece 5 X b3
@@ -76,7 +75,3 @@ testSuite =
                 , test "Full boards" <| assertEqual [[], [], []] <| List.map GB.emptySquares [d9, x9, o9]
               ]
             ]
-
--- main : Element
--- main =
---     elementRunner tests

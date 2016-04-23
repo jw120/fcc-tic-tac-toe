@@ -1,5 +1,5 @@
 
-module Game.BoardProp (all) where
+module Game.BoardProp (allClaims, boardListProducer) where
 
 import Check exposing (that, is, for)
 import Check.Producer as Producer
@@ -55,15 +55,15 @@ Claims
 
 -}
 
-all : Check.Claim
-all =
+allClaims : Check.Claim
+allClaims =
   Check.suite
     "Game.Board properties"
     [ addPieceProperties
     , emptySquareProperties
     , lineProperties
     ]
-    
+
 
 addPieceProperties : Check.Claim
 addPieceProperties =

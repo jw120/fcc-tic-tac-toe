@@ -44,23 +44,24 @@ score board ourSide =
 availableMoves : Board -> Piece -> List Move
 availableMoves board piece =
   GB.emptySquares board
-    |> List.map (\square -> (piece, square, GB.addPiece board square piece))
+    |> List.map (\square -> (piece, square, GB.addPiece square piece board))
 
 addScore : Move -> (Move, Score)
 addScore (piece, square, board) =
-  ((piece, square, board), score (GB.addPiece board square piece) piece)
+  ((piece, square, board), score (GB.addPiece square piece board) piece)
 
 
 gameState : Board -> GameState
 gameState board =
-  if GB.hasLine board X then
-    Won X
-  else if GB.hasLine board O then
-    Won O
-  else if GB.isFull board then
-    Draw
-  else
-    Ongoing
+  case GB.hasLine board of
+    Just (X, _) ->
+      Won X
+
+    Just (O, _) ->
+      Won O
+
+    Nothing ->
+      if GB.isFull board then Draw else Ongoing
 
 {-
 
