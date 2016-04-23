@@ -1,5 +1,3 @@
--- Runs Tests.elm (elm-test) and Properties.elm (elm-check)
-
 module Main where
 
 import ElmTest
@@ -9,15 +7,25 @@ import Console
 import Signal
 import Task
 
-import Properties
-import Tests
+import Game.BoardProp
+import Game.BoardTest
+
+allTests : ElmTest.Test
+allTests =
+  ElmTest.suite "elm-test unit tests"
+      [ Game.BoardTest.testSuite
+      ]
+
+allProperties : Check.Claim
+allProperties =
+  Game.BoardProp.all
 
 console : Console.IO ()
 console =
   ElmTest.consoleRunner <|
     ElmTest.suite "All tests"
-      [ Tests.all
-      , Check.Test.evidenceToTest (Check.quickCheck Properties.all)
+      [ allTests
+      , Check.Test.evidenceToTest (Check.quickCheck allProperties)
       ]
 
 port runner : Signal.Signal (Task.Task x ())

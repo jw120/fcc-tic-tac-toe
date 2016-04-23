@@ -78,7 +78,7 @@ toList = Dict.toList
 
 
 
--- Helper functioms to manipulate boardCorners
+-- Helper functioms to manipulate and test boards
 
 addPiece : Square -> Piece -> Board -> Board
 addPiece = Dict.insert
@@ -86,7 +86,10 @@ addPiece = Dict.insert
 getPiece : Square -> Board -> Maybe Piece
 getPiece = Dict.get
 
-
+isValid : Board -> Bool
+isValid =
+  Dict.filter (\k _ -> k < 1 || k > 9)
+    >> Dict.isEmpty
 
 -- Helper functions for board lookup
 
