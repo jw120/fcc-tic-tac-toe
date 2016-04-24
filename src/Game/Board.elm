@@ -102,6 +102,10 @@ isValid =
 isEmpty : Board -> Bool
 isEmpty = Dict.isEmpty
 
+pieces : Board -> List (Square, Piece)
+pieces board =
+  Dict.toList board
+
 
 -- Helper functions for board lookup
 

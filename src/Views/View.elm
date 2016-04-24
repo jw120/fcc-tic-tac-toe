@@ -14,7 +14,7 @@ view : Signal.Address Actions.Action -> Models.Model -> Html.Html
 view address model =
   Html.div
     []
-    [ Views.Board.view address model
-    , Views.Buttons.view address model
-    , Views.DebugBox.view address model
+    [ Views.Board.view model.board
+    , Views.Buttons.view address
+    , Views.DebugBox.view (model.debugMode, Models.showAppModel model)
     ]

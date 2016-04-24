@@ -2,13 +2,10 @@ module Views.DebugBox (..) where
 
 import Html
 import Html.Attributes
-import Signal
 
-import Actions
-import Models
 
-view : Signal.Address Actions.Action -> Models.Model -> Html.Html
-view _ model =
+view : (Bool, String) -> Html.Html
+view (debugOn, message) =
   Html.div
-    [ Html.Attributes.class "cdebug-box" ]
-    [ Html.text <| if model.debugMode then Models.showAppModel model else "" ]
+    [ Html.Attributes.class "debug-box" ]
+    [ Html.text <| if debugOn then message else "" ]

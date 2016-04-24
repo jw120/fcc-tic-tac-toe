@@ -6,10 +6,9 @@ import Html.Events
 import Signal
 
 import Actions
-import Models
 
-view : Signal.Address Actions.Action -> Models.Model -> Html.Html
-view address model =
+view : Signal.Address Actions.Action -> Html.Html
+view address =
   Html.div
     []
     [ playButton address Actions.StartAsBatsu "Start as X"
