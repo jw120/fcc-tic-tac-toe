@@ -1,5 +1,7 @@
 module Models (..) where
 
+import Game.Board
+
 import Actions
 import Dict
 

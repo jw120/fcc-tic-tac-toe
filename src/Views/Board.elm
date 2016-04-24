@@ -6,24 +6,12 @@ import Html
 import Signal
 
 import Actions
+import Constants exposing (squareSize, maruFraction, batsuFraction)
 import Models
-
--- Board is made of 100x100 squares
-squareSize : Float
-squareSize =
-  100.0
 
 boardSize : Int
 boardSize =
   round (3 * squareSize)
-
-maruFraction : Float
-maruFraction =
-  0.3
-
-batsuFraction : Float
-batsuFraction =
-  0.3
 
 gridLineStyle : GC.LineStyle
 gridLineStyle =

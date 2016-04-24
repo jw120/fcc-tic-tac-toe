@@ -2,13 +2,12 @@ module Main (main) where
 
 import Effects
 import Html
--- import Keyboard
+import Signal
 import StartApp
 import Task
 
--- import Actions
 import Models
---import Presses
+import MouseHandler
 import Update
 import Views.View
 
@@ -17,7 +16,7 @@ app : StartApp.App Models.Model
 app =
   StartApp.start
     { init = ( Models.initialModel, Effects.none )
-    , inputs = [ ]
+    , inputs = [ MouseHandler.clickSignal ]
     , update = (\a m -> (Update.update a m, Effects.none))
     , view = Views.View.view
     }

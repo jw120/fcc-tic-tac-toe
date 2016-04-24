@@ -20,3 +20,8 @@ update action model =
       { model
       | lastAction = Actions.StartAsMaru
       }
+
+    Actions.Click square ->
+      { model
+      | lastAction = Actions.Click square
+      }

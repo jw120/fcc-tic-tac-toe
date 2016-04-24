@@ -64,6 +64,14 @@ boardSides = [ 2, 4, 6, 8 ]
 boardCorners : List Square
 boardCorners = [ 1, 3, 7, 9 ]
 
+-- Heler functions for pieces
+
+opposite : Piece -> Piece
+opposite p =
+  case p of
+    X -> O
+    O -> X
+
 
 -- Helper functions to make boards (mainly for testing)
 
@@ -90,6 +98,10 @@ isValid : Board -> Bool
 isValid =
   Dict.filter (\k _ -> k < 1 || k > 9)
     >> Dict.isEmpty
+
+isEmpty : Board -> Bool
+isEmpty = Dict.isEmpty
+
 
 -- Helper functions for board lookup
 

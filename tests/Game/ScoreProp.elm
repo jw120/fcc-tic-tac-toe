@@ -19,9 +19,10 @@ scoreProperties : Check.Claim
 scoreProperties =
   Check.suite
     "score properties"
-    [ Check.claim
-      "Opposite sides have negated scores"
-      `that` (\bl -> let b = GB.fromList bl in GS.score b X + GS.score b O)
-      `is` always 0
-      `for` Game.BoardProp.boardListProducer
+    [
+      -- Check.claim
+      -- "Opposite sides have negated scores"
+      -- `that` (\bl -> let b = GB.fromList bl in GS.score b X + GS.score b O)
+      -- `is` always 0
+      -- `for` Game.BoardProp.boardListProducer
     ]
