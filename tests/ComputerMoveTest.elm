@@ -2,7 +2,7 @@ module Game.ScoreTest (allTests) where
 
 import ElmTest exposing (..)
 
-import Game.Board as GB exposing (Board, Piece(..), Square)
+import Board exposing (Board, Piece(..), Square)
 import Game.Score as GS
 
 {-
@@ -20,18 +20,18 @@ O..   XO.   XO.   XXO   OXO   OOX   OXX
 allTests : Test
 allTests =
   let
-    b0 = GB.fromList []
-    x1 = GB.fromList [(3, X)]
-    o1 = GB.fromList [(3, O)]
-    b2 = GB.fromList [(3, X), (5, O)]
-    b3 = GB.fromList [(1, X), (6, X), (7, O)]
-    w3 = GB.fromList [(3, X), (5, X), (7, X)]
-    x8 = GB.fromList [(1, X), (2, O), (3, O), (4, O), (5, X), (6, X), (7, X), (8, O)]
-    o8 = GB.fromList [(1, O), (2, X), (3, O), (4, X), (5, X), (6, O), (7, X), (8, O)]
-    b8 = GB.fromList [(2, O), (3, O), (4, X), (5, O), (6, X), (7, X), (8, X), (9, O)]
-    d9 = GB.fromList [(1, X), (2, O), (3, X), (4, O), (5, O), (6, X), (7, O), (8, X), (9, O)]
-    x9 = GB.fromList [(1, X), (2, O), (3, X), (4, O), (5, X), (6, O), (7, O), (8, O), (9, X)]
-    o9 = GB.fromList [(1, O), (2, O), (3, X), (4, O), (5, X), (6, O), (7, O), (8, X), (9, X)]
+    b0 = Board.fromList []
+    x1 = Board.fromList [(3, X)]
+    o1 = Board.fromList [(3, O)]
+    b2 = Board.fromList [(3, X), (5, O)]
+    b3 = Board.fromList [(1, X), (6, X), (7, O)]
+    w3 = Board.fromList [(3, X), (5, X), (7, X)]
+    x8 = Board.fromList [(1, X), (2, O), (3, O), (4, O), (5, X), (6, X), (7, X), (8, O)]
+    o8 = Board.fromList [(1, O), (2, X), (3, O), (4, X), (5, X), (6, O), (7, X), (8, O)]
+    b8 = Board.fromList [(2, O), (3, O), (4, X), (5, O), (6, X), (7, X), (8, X), (9, O)]
+    d9 = Board.fromList [(1, X), (2, O), (3, X), (4, O), (5, O), (6, X), (7, O), (8, X), (9, O)]
+    x9 = Board.fromList [(1, X), (2, O), (3, X), (4, O), (5, X), (6, O), (7, O), (8, O), (9, X)]
+    o9 = Board.fromList [(1, O), (2, O), (3, X), (4, O), (5, X), (6, O), (7, O), (8, X), (9, X)]
   in
     suite
       "Scoring"
@@ -65,7 +65,7 @@ allTests =
        ]
       , suite "availableMoves helper"
         [ test "Empty board"
-          <| assertEqual (List.map (\i -> (X, i, GB.addPiece i X b0)) [1..9])
+          <| assertEqual (List.map (\i -> (X, i, Board.addPiece i X b0)) [1..9])
           <| GS.availableMoves b0 X
         , test "Full boards"
           <| assertEqual [[], [], [], [], [], []]

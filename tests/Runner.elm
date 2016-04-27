@@ -7,23 +7,23 @@ import Console
 import Signal
 import Task
 
-import Game.BoardProp
-import Game.BoardTest
-import Game.ScoreTest
-import Game.ScoreProp
+import BoardProp
+import BoardTest
+--import Game.ScoreTest
+--import Game.ScoreProp
 
 allTests : ElmTest.Test
 allTests =
   ElmTest.suite "elm-test unit tests"
-    [ Game.BoardTest.allTests
-    , Game.ScoreTest.allTests
+    [ BoardTest.allTests
+--    , Game.ScoreTest.allTests
     ]
 
 allProperties : Check.Claim
 allProperties =
   Check.suite "elm-check properties"
-    [ Game.BoardProp.allClaims
-    , Game.ScoreProp.allClaims
+    [ BoardProp.allClaims
+--    , Game.ScoreProp.allClaims
     ]
 
 console : Console.IO ()

@@ -1,15 +1,24 @@
-module MouseHandler (clickSignal) where
+module MouseClick (signal) where
+
+{- |
+
+Create a signal from mouse clicks on the board to plug into StartApp
+
+@doc signal
+
+-}
+
 
 import Mouse
 import Signal
 
 import Actions
-import Constants exposing (squareSize, clickableFraction)
+import ViewConstants exposing (squareSize, clickableFraction)
 
 
 
-clickSignal : Signal.Signal Actions.Action
-clickSignal =
+signal : Signal.Signal Actions.Action
+signal =
     Signal.sampleOn Mouse.clicks Mouse.position
       |> Signal.map decodePosition
 

@@ -1,24 +1,40 @@
-module Models (..) where
+module Models (Model, State(..), initialModel) where
 
-import Game.Board
+{-|
+
+@doc Model, State, initialModel
+
+-}
+
 
 import Actions
+import Board
+
 
 
 type alias Model =
-  { board : Game.Board.Board
-  , debugMode : Bool
-  , lastAction : Actions.Action
+  { board : Board.Board
+  , state : State
+  , player : Board.Piece -- Side of our human player
+  , message : String -- Message shown under the board (e.g., "You win")
+  , debugMode : Bool  -- True means we show a debug box at the bottom of our view
+  , lastAction : Actions.Action -- Held only to show in debug box
   }
+
+
+type State
+  = Won Board.Piece -- Given player has won the game
+  | Draw -- Board is full with no winner
+  | PreStart -- before player has selected a side
+  | Ongoing -- any other game state
+
 
 initialModel : Model
 initialModel =
-  { board = Game.Board.emptyBoard
+  { board = Board.emptyBoard
+  , state = PreStart
+  , player = Board.X -- dummy value for pre-start
+  , message = ""
   , debugMode = True
   , lastAction = Actions.NoOp
   }
-
--- For debugging
-showAppModel : Model -> String
-showAppModel =
-  toString

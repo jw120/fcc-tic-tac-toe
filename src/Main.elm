@@ -7,7 +7,7 @@ import StartApp
 import Task
 
 import Models
-import MouseHandler
+import MouseClick
 import Update
 import Views.View
 
@@ -16,7 +16,7 @@ app : StartApp.App Models.Model
 app =
   StartApp.start
     { init = ( Models.initialModel, Effects.none )
-    , inputs = [ MouseHandler.clickSignal ]
+    , inputs = [ MouseClick.signal ]
     , update = (\a m -> (Update.update a m, Effects.none))
     , view = Views.View.view
     }

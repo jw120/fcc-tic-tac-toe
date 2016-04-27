@@ -1,8 +1,16 @@
-module Update where
+module Update (update) where
+
+{-|
+
+@doc update
+
+-}
+
 
 import Actions
-import Game.Board
 import Models
+import PlayerMove
+
 
 update : Actions.Action -> Models.Model -> Models.Model
 update action model =
@@ -23,7 +31,5 @@ update action model =
       }
 
     Actions.Click square ->
-      { model
-      | lastAction = Actions.Click square
-      , board = Game.Board.addPiece square Game.Board.X model.board
-      }
+      { model | lastAction = Actions.Click square }
+        |> PlayerMove.update square

@@ -1,9 +1,16 @@
-module Actions (..) where
+module Actions (Action(..)) where
 
-import Game.Board
+{-|
+
+@doc Action
+
+-}
+
+
+import Board
 
 type Action
   = NoOp
-  | StartAsBatsu
-  | StartAsMaru
-  | Click Game.Board.Square
+  | StartAsBatsu -- Player clicks to (re)-start as X
+  | StartAsMaru -- Player clicks to (re)-start as O
+  | Click Board.Square -- Player clicks on a board square

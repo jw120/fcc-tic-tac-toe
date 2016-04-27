@@ -1,14 +1,23 @@
 module Views.View (..) where
 
+{-| Top-level renderer
+
+@doc view
+
+-}
+
+
 import Html
 import Signal
 
 import Views.Board
 import Views.Buttons
 import Views.DebugBox
+import Views.MessageBox
 
 import Actions
 import Models
+
 
 view : Signal.Address Actions.Action -> Models.Model -> Html.Html
 view address model =
@@ -16,5 +25,6 @@ view address model =
     []
     [ Views.Board.view model.board
     , Views.Buttons.view address
-    , Views.DebugBox.view (model.debugMode, Models.showAppModel model)
+    , Views.MessageBox.view model.message
+    , Views.DebugBox.view (model.debugMode, toString model)
     ]

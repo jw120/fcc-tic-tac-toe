@@ -1,5 +1,5 @@
 
-module Game.BoardProp (allClaims, boardListProducer) where
+module BoardProp (allClaims, boardListProducer) where
 
 import Check exposing (that, is, for)
 import Check.Producer as Producer
@@ -7,7 +7,7 @@ import List
 import Random
 import Shrink
 
-import Game.Board as GB exposing (Board, Piece(..), Square)
+import Board exposing (Board, Piece(..), Square)
 
 {-
 
@@ -71,18 +71,18 @@ addPieceProperties =
     "addPiece properties"
     [ Check.claim
       "Adding a piece always gives a valid board"
-      `that` (\(s, p, bl) -> GB.isValid (GB.addPiece s p (GB.fromList bl)))
+      `that` (\(s, p, bl) -> Board.isValid (Board.addPiece s p (Board.fromList bl)))
       `is` (\_ -> True)
       `for` Producer.tuple3 (squareProducer, pieceProducer, boardListProducer)
     , Check.claim
       "Adding a piece gives a board with that piece"
-      `that` (\(s, p, bl) -> GB.getPiece s (GB.addPiece s p (GB.fromList bl)))
+      `that` (\(s, p, bl) -> Board.getPiece s (Board.addPiece s p (Board.fromList bl)))
       `is` (\(_, p, bl) -> Just p)
       `for` Producer.tuple3 (squareProducer, pieceProducer, boardListProducer)
     , Check.claim
       "Adding a piece is idempotent"
-      `that` (\(s, p, bl) -> GB.addPiece s p (GB.addPiece s p (GB.fromList bl)))
-      `is` (\(s, p, bl) -> GB.addPiece s p (GB.fromList bl))
+      `that` (\(s, p, bl) -> Board.addPiece s p (Board.addPiece s p (Board.fromList bl)))
+      `is` (\(s, p, bl) -> Board.addPiece s p (Board.fromList bl))
       `for` Producer.tuple3 (squareProducer, pieceProducer, boardListProducer)
     ]
 
@@ -92,7 +92,7 @@ emptySquareProperties =
     "emptySquares properties"
     [ Check.claim
       "emptySquares counts correctly"
-      `that` (GB.fromList >> GB.emptySquares >> List.length)
+      `that` (Board.fromList >> Board.emptySquares >> List.length)
       `is` (List.length >> (\n -> 9 - n))
       `for` boardListProducer
     ]
@@ -100,8 +100,8 @@ emptySquareProperties =
 -- validate that if lines returned by hasLine are found by isLine
 hasTriggersIs : Board -> Bool
 hasTriggersIs b =
-  case GB.hasLine b of
-    Just (p, l) -> GB.isLine l b == Just p
+  case Board.hasLine b of
+    Just (p, l) -> Board.isLine l b == Just p
     Nothing -> True
 
 lineProperties : Check.Claim
@@ -110,7 +110,7 @@ lineProperties =
     "line properties"
     [ Check.claim
       "hasLine triggers isLine"
-      `that` (GB.fromList >> hasTriggersIs)
+      `that` (Board.fromList >> hasTriggersIs)
       `is` always True
       `for` boardListProducer
     ]

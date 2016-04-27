@@ -1,9 +1,18 @@
-module Game.Score (..) where
+module Game.ComputerMove (..) where
+
+{-|
+
+Module to generate a computer move
+
+@doc move
+
+-}
+
 
 import List
 import Maybe
 
-import Game.Board as GB exposing (Board, Piece(..), Square)
+import Board exposing (Board, Piece(..), Square)
 
 
 type alias Score =
@@ -11,6 +20,12 @@ type alias Score =
 
 type alias Move =
   (Piece, Square, Board)
+
+type alias Response
+  = Lost -- Computer has lost (and does not move)
+  | ContinuingMove Move -- Computer moves and game continues
+  | WinningMove Move -- Computer moves and wins
+  | DrawingMove Move -- Computer moves and board is drawn and full
 
 type GameState
   = Won Piece
@@ -24,6 +39,10 @@ Need to separate point-of-view from who is about to play
 Use +100 for X and -100 for O?
 
 -}
+
+move : Board -> Piece -> Maybe Move
+move board piece =
+  Nothing
 
 -- Evaluate the position for given side (who is about to play), +100 X win to -100 O win scale
 score : Board -> Piece -> Score

@@ -1,48 +1,35 @@
-module Views.Board (..) where
+module Views.Board (view) where
 
-import Color
-import Graphics.Collage as GC exposing (defaultLine)
+{-| Renderer for the Board
+
+@doc view
+
+-}
+
+
+import Graphics.Collage as GC
 import Html
 
-import Constants exposing (squareSize, maruFraction, batsuFraction)
-import Game.Board exposing (Square, Piece(..))
-
-
-boardSize : Int
-boardSize =
-  round (3 * squareSize)
-
-gridLineStyle : GC.LineStyle
-gridLineStyle =
-  { defaultLine
-  | width = 2
-  }
-
-maruLineStyle : GC.LineStyle
-maruLineStyle =
-  { defaultLine
-  | color = Color.red
-  , width = 10
-  }
-
-batsuLineStyle : GC.LineStyle
-batsuLineStyle =
-  { defaultLine
-  | color = Color.blue
-  , width = 10
-  }
+import ViewConstants exposing (squareSize, maruFraction, batsuFraction, gridLineStyle, maruLineStyle, batsuLineStyle)
+import Board exposing (Square, Piece(..), Board)
 
 
 {-
-My understanding of Graphics types
+Note - My understanding of Graphics types
 Element - For rendering
 Form - Main focus of the Graphcs.Collage model
 Shape/Path - geometric path (no styles), converted to Form with traced etc
 -}
 
-view : Game.Board.Board -> Html.Html
+
+{-| Render a Board as Html -}
+view : Board -> Html.Html
 view board =
-    GC.collage boardSize boardSize (boardFrame ++ List.map drawPiece (Game.Board.pieces board))
+  let
+    size = round (3.0 * squareSize)
+  in
+    boardFrame ++ List.map drawPiece (Board.toList board)
+      |> GC.collage size size
       |> Html.fromElement
 
 
