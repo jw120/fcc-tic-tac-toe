@@ -8,7 +8,8 @@ module Update (update) where
 
 
 import Actions
-import Models
+import Board
+import Models exposing (initialModel)
 import PlayerMove
 
 
@@ -21,13 +22,15 @@ update action model =
       }
 
     Actions.StartAsBatsu ->
-      { model
+      { initialModel
       | lastAction = Actions.StartAsBatsu
+      , player = Board.X
       }
 
     Actions.StartAsMaru ->
-      { model
+      { initialModel
       | lastAction = Actions.StartAsMaru
+      , player = Board.O
       }
 
     Actions.Click square ->

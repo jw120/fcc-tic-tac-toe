@@ -2,7 +2,7 @@ module Board
   ( Square, Piece(..), Board, Line
   , opposite
   , fromList, toList, emptyBoard, isEmpty, isValid
-  , getPiece, isFull, isLine, hasLine, emptySquares
+  , getPiece, isFull, isEmptySquare, hasLine, emptySquares
   , addPiece
   ) where
 
@@ -23,7 +23,7 @@ squares are numbered from 1 to 9
 @doc fromList, toList, emptyBoard, isEmpty, isValid
 
 # Board examination functions
-@doc getPiece, isFull, hasLine, emptySquares
+@doc getPiece, isFull, hasLine, isEmptySquare, mptySquares
 
 # Board manipulation function
 @doc addPiece
@@ -116,6 +116,11 @@ isFull board =
     |> not
 
 
+isEmptySquare : Square -> Board -> Bool
+isEmptySquare square board =
+  Dict.get square board == Nothing
+
+
 {-| If the board contains a complete line, return it -}
 hasLine : Board -> Maybe (Piece, Line)
 hasLine board =
@@ -150,11 +155,6 @@ addPiece = Dict.insert
 isPiece : Square -> Piece -> Board -> Bool
 isPiece square piece board =
   Dict.get square board == Just piece
-
-
-isEmptySquare : Square -> Board -> Bool
-isEmptySquare square board =
-  Dict.get square board == Nothing
 
 
 isLine : Line -> Board -> Maybe Piece

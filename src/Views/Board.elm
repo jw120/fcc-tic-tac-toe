@@ -61,7 +61,6 @@ maru : GC.Form
 maru =
   GC.circle (maruFraction * squareSize)
   |> GC.outlined maruLineStyle
-  |> GC.move (squareSize, -squareSize)
 
 
 batsu : GC.Form
