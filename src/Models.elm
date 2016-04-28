@@ -1,8 +1,8 @@
-module Models (Model, State(..), initialModel) where
+module Models (Model, State(..), initialModel, reset) where
 
 {-|
 
-@doc Model, State, initialModel
+@doc Model, State, initialModel, reset
 
 -}
 
@@ -35,6 +35,17 @@ initialModel =
   , state = PreStart
   , player = Board.X -- dummy value for pre-start
   , message = ""
-  , debugMode = True
+  , debugMode = False
   , lastAction = Actions.NoOp
+  }
+
+
+-- reset the model for a new game
+reset : Board.Piece -> Model -> Model
+reset player model =
+  { model
+  | board = Board.emptyBoard
+  , state = PreStart
+  , player = player
+  , message = ""
   }

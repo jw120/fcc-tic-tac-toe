@@ -2,10 +2,12 @@ module Main (main) where
 
 import Effects
 import Html
+import Keyboard
 import Signal
 import StartApp
 import Task
 
+import KeyPresses
 import Models
 import MouseClick
 import Update
@@ -16,7 +18,7 @@ app : StartApp.App Models.Model
 app =
   StartApp.start
     { init = ( Models.initialModel, Effects.none )
-    , inputs = [ MouseClick.signal ]
+    , inputs = [ MouseClick.signal, Signal.map KeyPresses.handler Keyboard.presses ]
     , update = (\a m -> (Update.update a m, Effects.none))
     , view = Views.View.view
     }

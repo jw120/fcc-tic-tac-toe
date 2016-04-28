@@ -9,7 +9,7 @@ module Update (update) where
 
 import Actions
 import Board
-import Models exposing (initialModel)
+import Models exposing (reset)
 import PlayerMove
 
 
@@ -22,17 +22,17 @@ update action model =
       }
 
     Actions.StartAsBatsu ->
-      { initialModel
-      | lastAction = Actions.StartAsBatsu
-      , player = Board.X
-      }
+      reset Board.X { model | lastAction = Actions.StartAsBatsu }
 
     Actions.StartAsMaru ->
-      { initialModel
-      | lastAction = Actions.StartAsMaru
-      , player = Board.O
-      }
+      reset Board.O { model | lastAction = Actions.StartAsBatsu }
 
     Actions.Click square ->
       { model | lastAction = Actions.Click square }
         |> PlayerMove.update square
+
+    Actions.ToggleDebug ->
+      { model
+      | lastAction = Actions.ToggleDebug
+      , debugMode = not model.debugMode
+      }
