@@ -8,6 +8,8 @@ module Update (update) where
 
 
 import Effects
+import Random
+import Time
 
 import Actions
 import Board
@@ -32,8 +34,11 @@ update action model =
     Actions.PlayerMoved square ->
       Move.player square taggedModel
 
-    Actions.ComputerMoved newBoard ->
-      ( Move.computer newBoard taggedModel, Effects.none )
+    Actions.ComputerMoved (newSeed, newBoard) ->
+      (  Move.computer newSeed newBoard taggedModel , Effects.none )
 
     Actions.ToggleDebug ->
       ( { taggedModel | debugMode = not taggedModel.debugMode }, Effects.none)
+
+    Actions.StartingTick time ->
+      ( { taggedModel | seed = Random.initialSeed (round (Time.inMilliseconds time)) }, Effects.none)

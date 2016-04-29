@@ -9,6 +9,7 @@ Module to handle move, including validation and checking of game state
 -}
 
 import Effects
+import Random
 import Result exposing (andThen)
 
 import Actions
@@ -33,16 +34,16 @@ player square model =
     |> (flip andThen) checkGameContinues
     |> (\result -> case result of
       Ok updatedModel
-        -> (updatedModel, Computer.moveEffect (Board.opposite model.player) updatedModel.board)
+        -> (updatedModel, Computer.moveEffect model.seed (Board.opposite model.player) updatedModel.board)
 
       Err errorModel
         -> (errorModel, Effects.none))
 
 
 {-| Handle a computer move -}
-computer : Board.Board -> Models.Model -> Models.Model
-computer newBoard model =
-  { model | board = newBoard }
+computer : Random.Seed -> Board.Board -> Models.Model -> Models.Model
+computer newSeed newBoard model =
+  { model | board = newBoard, seed = newSeed }
     |> checkGameContinues
     |> (\result -> case result of
       Ok continuingModel
@@ -82,9 +83,9 @@ getComputerMove model =
   let
     computer = Board.opposite model.player
   in
-    case Computer.move (model.board) computer of
-      Just (_, _, newBoard) ->
-        Ok { model | board = newBoard }
+    case Computer.move model.seed (model.board) computer of
+      (seed', Just (_, _, newBoard)) ->
+        Ok { model | board = newBoard, seed = seed' }
 
-      Nothing ->
-        Err { model | message = "Failed to find a computer move" } -- should not happen
+      (seed', Nothing) ->
+        Err { model | message = "Failed to find a computer move", seed = seed' } -- should not happen

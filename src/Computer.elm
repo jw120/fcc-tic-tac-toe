@@ -11,11 +11,14 @@ Logic to generate a computer move
 
 import Effects
 import List
+import List.Nonempty exposing ((:::))
 import Maybe
+import Random
 import Task
 
 import Actions
 import Board exposing (Board, Piece(..), Square)
+import RandomChoice
 
 
 type alias Score =
@@ -26,52 +29,52 @@ type alias Move =
 
 
 {-| Generate the computer's move on given board for the given side -}
-move : Board -> Piece -> Maybe Move
-move board player =
+move : Random.Seed -> Board -> Piece -> (Random.Seed, Maybe Move)
+move seed board player =
   case Board.toList board of
     [] ->
-      Just (heuristicEmpty board player)
+      heuristicEmpty seed board player
 
     [(square, _)] ->
-      Just (heuristicOne square board player)
+      heuristicOne seed square board player
 
     _ ->
       bestScoredMove player board
         |> Maybe.map fst
+        |> (\m -> (seed, m))
 
 
 {-| Create an effect which will generate the computer's move -}
-moveEffect : Board.Piece -> Board.Board -> Effects.Effects Actions.Action
-moveEffect player board =
+moveEffect : Random.Seed -> Board.Piece -> Board.Board -> Effects.Effects Actions.Action
+moveEffect seed player board =
   let
-    toAction : Maybe Move -> Actions.Action
-    toAction =
-      Maybe.map (\(_, _, b) -> b)
-      >> Maybe.withDefault board
-      >> Actions.ComputerMoved
+    toAction : (Random.Seed, Maybe Move) -> Actions.Action
+    toAction (seed', m) =
+      Maybe.map (\(_, _, b) -> b) m
+        |> Maybe.withDefault board
+        |> (\b -> Actions.ComputerMoved (seed', b))
   in
     Task.succeed ()
-      |> Task.map (\() -> toAction (move board player))
+      |> Task.map (\() -> toAction (move seed board player))
       |> Effects.task
 
 
 {-| Heuristic for moving on an empty board: always play in centre -}
-heuristicEmpty : Board -> Piece -> Move
-heuristicEmpty board player =
-  (player, 5, Board.addPiece 5 player board)
+heuristicEmpty : Random.Seed -> Board -> Piece -> (Random.Seed, Maybe Move)
+heuristicEmpty seed board player =
+  (seed, Just (player, 5, Board.addPiece 5 player board))
+
 
 {-| Heuristic for moving on a board with one piece -}
-heuristicOne : Square -> Board -> Piece -> Move
-heuristicOne occupied board player =
+heuristicOne : Random.Seed -> Square -> Board -> Piece -> (Random.Seed, Maybe Move)
+heuristicOne seed occupied board player =
   let
-    response = if occupied == 5 then
-      2
+    (seed', response) = if occupied == 5 then
+        RandomChoice.fromList seed (List.Nonempty.Nonempty 2 [4, 6, 8])
     else
-      5
+        (seed, 5)
   in
-    (player, response, Board.addPiece response player board)
-
-
+    (seed', Just (player, response, Board.addPiece response player board))
 
 
 {- Main game logic function. Implements minimax. Return the best move in a list of moves with scores. Nothing if list is empty -}

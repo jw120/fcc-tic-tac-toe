@@ -1,4 +1,4 @@
-module Models (Model, initialModel, reset) where
+module Models (Model, initial, reset) where
 
 {-|
 
@@ -8,6 +8,7 @@ module Models (Model, initialModel, reset) where
 
 
 import Effects
+import Random
 
 import Actions
 import Board
@@ -19,18 +20,20 @@ type alias Model =
   , player : Board.Piece -- Side of our human player
   , message : String -- Message shown under the board (e.g., "You win")
   , debugMode : Bool  -- True means we show a debug box at the bottom of our view
+  , seed : Random.Seed
   , lastAction : Actions.Action -- Held only to show in debug box
   }
 
 
-initialModel : Model
-initialModel =
-  { board = Board.emptyBoard
+initial : (Model, Effects.Effects Actions.Action)
+initial =
+  ( { board = Board.emptyBoard
   , player = Board.X
   , message = ""
   , debugMode = False
   , lastAction = Actions.NoOp
-  }
+  , seed = Random.initialSeed 0 -- replaced via StartingTick
+  }, Effects.tick Actions.StartingTick )
 
 
 -- reset the model for a new game
@@ -48,4 +51,4 @@ reset player model =
       ( baseModel, Effects.none)
 
     Board.O ->
-      ( baseModel, Computer.moveEffect Board.X baseModel.board )
+      ( baseModel, Computer.moveEffect model.seed Board.X baseModel.board )

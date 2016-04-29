@@ -17,7 +17,7 @@ import Views.View
 app : StartApp.App Models.Model
 app =
   StartApp.start
-    { init = ( Models.initialModel, Effects.none )
+    { init = Models.initial
     , inputs = [ MouseClick.signal, Signal.map KeyPresses.handler Keyboard.presses ]
     , update = Update.update
     , view = Views.View.view
