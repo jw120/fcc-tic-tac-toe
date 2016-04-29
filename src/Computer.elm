@@ -25,14 +25,19 @@ type alias Move =
   (Piece, Square, Board)
 
 
-{-| Generate the computer's move on given board for the give side -}
+{-| Generate the computer's move on given board for the given side -}
 move : Board -> Piece -> Maybe Move
 move board player =
-  if Board.isEmpty board then
-    Just (player, 5, Board.addPiece 5 player board)
-  else
-    bestScoredMove player board
-      |> Maybe.map fst
+  case Board.toList board of
+    [] ->
+      Just (heuristicEmpty board player)
+
+    [(square, _)] ->
+      Just (heuristicOne square board player)
+
+    _ ->
+      bestScoredMove player board
+        |> Maybe.map fst
 
 
 {-| Create an effect which will generate the computer's move -}
@@ -48,6 +53,25 @@ moveEffect player board =
     Task.succeed ()
       |> Task.map (\() -> toAction (move board player))
       |> Effects.task
+
+
+{-| Heuristic for moving on an empty board: always play in centre -}
+heuristicEmpty : Board -> Piece -> Move
+heuristicEmpty board player =
+  (player, 5, Board.addPiece 5 player board)
+
+{-| Heuristic for moving on a board with one piece -}
+heuristicOne : Square -> Board -> Piece -> Move
+heuristicOne occupied board player =
+  let
+    response = if occupied == 5 then
+      2
+    else
+      5
+  in
+    (player, response, Board.addPiece response player board)
+
+
 
 
 {- Main game logic function. Implements minimax. Return the best move in a list of moves with scores. Nothing if list is empty -}
