@@ -19,7 +19,7 @@ app =
   StartApp.start
     { init = ( Models.initialModel, Effects.none )
     , inputs = [ MouseClick.signal, Signal.map KeyPresses.handler Keyboard.presses ]
-    , update = (\a m -> (Update.update a m, Effects.none))
+    , update = Update.update
     , view = Views.View.view
     }
 

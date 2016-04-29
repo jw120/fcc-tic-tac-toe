@@ -1,17 +1,20 @@
-module ComputerMove (..) where
+module Computer (move, moveEffect) where
 
 {-|
 
-Module to generate a computer move
+Logic to generate a computer move
 
-@doc move
+@doc move, moveEffect
 
 -}
 
 
+import Effects
 import List
 import Maybe
+import Task
 
+import Actions
 import Board exposing (Board, Piece(..), Square)
 
 
@@ -22,11 +25,29 @@ type alias Move =
   (Piece, Square, Board)
 
 
-{- Generate the computer's move on given board for the give side -}
+{-| Generate the computer's move on given board for the give side -}
 move : Board -> Piece -> Maybe Move
 move board player =
-  bestScoredMove player board
-    |> Maybe.map fst
+  if Board.isEmpty board then
+    Just (player, 5, Board.addPiece 5 player board)
+  else
+    bestScoredMove player board
+      |> Maybe.map fst
+
+
+{-| Create an effect which will generate the computer's move -}
+moveEffect : Board.Piece -> Board.Board -> Effects.Effects Actions.Action
+moveEffect player board =
+  let
+    toAction : Maybe Move -> Actions.Action
+    toAction =
+      Maybe.map (\(_, _, b) -> b)
+      >> Maybe.withDefault board
+      >> Actions.ComputerMoved
+  in
+    Task.succeed ()
+      |> Task.map (\() -> toAction (move board player))
+      |> Effects.task
 
 
 {- Main game logic function. Implements minimax. Return the best move in a list of moves with scores. Nothing if list is empty -}

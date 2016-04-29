@@ -7,32 +7,33 @@ module Update (update) where
 -}
 
 
+import Effects
+
 import Actions
 import Board
-import Models exposing (reset)
-import PlayerMove
+import Models
+import Move
 
 
-update : Actions.Action -> Models.Model -> Models.Model
+update : Actions.Action -> Models.Model -> (Models.Model, Effects.Effects Actions.Action)
 update action model =
-  case action of
+  let
+    taggedModel = { model | lastAction = action }
+  in case action of
     Actions.NoOp ->
-      { model
-      | lastAction = Actions.NoOp
-      }
+      ( taggedModel, Effects.none )
 
     Actions.StartAsBatsu ->
-      reset Board.X { model | lastAction = Actions.StartAsBatsu }
+      Models.reset Board.X taggedModel
 
     Actions.StartAsMaru ->
-      reset Board.O { model | lastAction = Actions.StartAsBatsu }
+      Models.reset Board.O taggedModel
 
-    Actions.Click square ->
-      { model | lastAction = Actions.Click square }
-        |> PlayerMove.update square
+    Actions.PlayerMoved square ->
+      Move.player square taggedModel
+
+    Actions.ComputerMoved newBoard ->
+      ( Move.computer newBoard taggedModel, Effects.none )
 
     Actions.ToggleDebug ->
-      { model
-      | lastAction = Actions.ToggleDebug
-      , debugMode = not model.debugMode
-      }
+      ( { taggedModel | debugMode = not taggedModel.debugMode }, Effects.none)

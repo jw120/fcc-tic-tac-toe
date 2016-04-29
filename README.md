@@ -1,10 +1,13 @@
 ## TODO
 
-* ComputerMove - tidy (arg order etc) tests
-* Better handle computer response - async?
+* Check conventions for arg orders
+* Speed up with heuristics
+* Tests working again
+* CSS
+* why does it take time to repaint board after first move on first run
 
 
-## Elm organization
+## Elm file organization
 
 Explain....
 

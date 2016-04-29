@@ -42,4 +42,4 @@ decodePosition (x, y) =
     else if xOffset > clickableFraction || yOffset > clickableFraction then
       Actions.NoOp -- Clicked too far away from centre
     else
-      Actions.Click (1 + xSquare + 3 * ySquare)
+      Actions.PlayerMoved (1 + xSquare + 3 * ySquare)
