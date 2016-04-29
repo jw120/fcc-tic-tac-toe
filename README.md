@@ -1,7 +1,7 @@
 ## TODO
 
-* PlayerMove
-* ComputerMove (sub-dir? and restore its tests)
+* ComputerMove - tidy (arg order etc) tests
+* Better handle computer response - async?
 
 
 ## Elm organization

@@ -1,4 +1,4 @@
-module Game.ComputerMove (..) where
+module ComputerMove (..) where
 
 {-|
 
@@ -21,84 +21,59 @@ type alias Score =
 type alias Move =
   (Piece, Square, Board)
 
-type alias Response
-  = Lost -- Computer has lost (and does not move)
-  | ContinuingMove Move -- Computer moves and game continues
-  | WinningMove Move -- Computer moves and wins
-  | DrawingMove Move -- Computer moves and board is drawn and full
 
-type GameState
-  = Won Piece
-  | Draw
-  | Ongoing
-  | Start -- no pieces on board
-
-
-{-
-Need to separate point-of-view from who is about to play
-Use +100 for X and -100 for O?
-
--}
-
+{- Generate the computer's move on given board for the give side -}
 move : Board -> Piece -> Maybe Move
-move board piece =
-  Nothing
+move board player =
+  bestScoredMove player board
+    |> Maybe.map fst
 
--- Evaluate the position for given side (who is about to play), +100 X win to -100 O win scale
+
+{- Main game logic function. Implements minimax. Return the best move in a list of moves with scores. Nothing if list is empty -}
+bestScoredMove : Piece -> Board -> Maybe (Move, Score)
+bestScoredMove player board =
+  let
+    moves : List Move
+    moves = availableMoves board player
+    scoredMoves : List (Move, Score)
+    scoredMoves = List.map addScore moves
+    optimizeForPlayer : List Score -> Score
+    optimizeForPlayer =
+        (if player == X then List.maximum else List.minimum)
+          >> Maybe.withDefault 0
+    bestScore : Score
+    bestScore = List.map snd scoredMoves
+      |> optimizeForPlayer
+    bestScoredMoves : List (Move, Score)
+    bestScoredMoves = List.filter (\(move, score) -> score == bestScore) scoredMoves
+  in
+    List.head bestScoredMoves
+
+
+{- Helper function - calculates the score of a given board -}
 score : Board -> Piece -> Score
-score board ourSide =
-  case gameState board of
-    Won X ->
-      100
-
-    Won O ->
-      -100
-
-    Draw ->
-      0
-
-    Start ->
-      0
-
-    Ongoing ->
-      let
-        moves : List Move
-        moves = availableMoves board ourSide
-        scoredMoves : List (Move, Score)
-        scoredMoves = List.map addScore moves
-        listBest : List comparable -> Maybe comparable
-        listBest = if ourSide == X then List.maximum else List.minimum
-        bestScore : Maybe Score
-        bestScore = List.map snd scoredMoves
-          |> listBest
-      in
-        List.map snd scoredMoves
-          |> listBest
-          |> Maybe.withDefault 0 -- 0 score if no moves
-
-availableMoves : Board -> Piece -> List Move
-availableMoves board piece =
-  GB.emptySquares board
-    |> List.map (\square -> (piece, square, GB.addPiece square piece board))
-
-addScore : Move -> (Move, Score)
-addScore (piece, square, board) =
-  ((piece, square, board), score (GB.addPiece square piece board) (GB.opposite piece))
-
-
-gameState : Board -> GameState
-gameState board =
-  case GB.hasLine board of
-    Just (X, _) ->
-      Won X
-
-    Just (O, _) ->
-      Won O
+score board player =
+  case Board.hasLine board of
+    Just (winner, _) ->
+      if winner == X then 100 else -100
 
     Nothing ->
-      if GB.isFull board then
-        Draw
-      else if GB.isEmpty board then
-        Start
+      if Board.isFull board then
+        0
       else
-        Ongoing
+        bestScoredMove player board
+          |> Maybe.map snd
+          |> Maybe.withDefault 0
+
+
+{- Helper function that generates all possible moves -}
+availableMoves : Board -> Piece -> List Move
+availableMoves board piece =
+  Board.emptySquares board
+    |> List.map (\square -> (piece, square, Board.addPiece square piece board))
+
+
+{- Helper function to add the score to a move -}
+addScore : Move -> (Move, Score)
+addScore (piece, square, board) =
+  ((piece, square, board), score (Board.addPiece square piece board) (Board.opposite piece))

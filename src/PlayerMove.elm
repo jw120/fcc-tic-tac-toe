@@ -12,6 +12,7 @@ computer move in response.
 import Result exposing (andThen)
 
 import Board exposing (Square)
+import ComputerMove
 import Models exposing (Model, State(..))
 
 {-
@@ -61,7 +62,15 @@ checkGameContinues model =
 
 getComputerMove : Model -> Result Model Model
 getComputerMove model =
-  Ok model
+  let
+    computer = Board.opposite model.player
+  in
+    case ComputerMove.move (model.board) computer of
+      Just (_, _, newBoard) ->
+        Ok { model | board = newBoard }
+
+      Nothing ->
+        Err { model | message = "Failed to find a computer move" } -- should not happen
 
 
 extractModel : Result Model Model -> Model
