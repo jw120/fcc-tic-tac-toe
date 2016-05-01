@@ -1,0 +1,41 @@
+/* Container for the two play buttons */
+.play-button-box {
+  width: 300px;
+  height: 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+}
+
+/* Play buttons */
+.play-button {
+  width: 120px;
+  height: 24px;
+  color: black;
+  background-color: lightgrey;
+  border: none;
+  font-size: 16px;
+  font-family: sans-serif;
+}
+
+/* Avoid the outlining of a button after it is clicked */
+.play-button:focus {
+    outline: none;
+}
+
+/* Message box - for "Drawn" etc messages */
+.message-box {
+  width: 300px;
+  height: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+/* Debug box - for debugging messages */
+.debug-box {
+  width: 300px;
+  font-size: 12px;
+}

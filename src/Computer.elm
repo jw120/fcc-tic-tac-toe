@@ -1,10 +1,10 @@
-module Computer (move, moveEffect) where
+module Computer (move, moveEffect, score, availableMoves) where
 
 {-|
 
 Logic to generate a computer move
 
-@doc move, moveEffect
+@doc move, moveEffect, score
 
 -}
 
@@ -62,7 +62,10 @@ moveEffect seed player board =
 {-| Heuristic for moving on an empty board: always play in centre -}
 heuristicEmpty : Random.Seed -> Board -> Piece -> (Random.Seed, Maybe Move)
 heuristicEmpty seed board player =
-  (seed, Just (player, 5, Board.addPiece 5 player board))
+  let
+    (seed', response) = RandomChoice.fromList seed (List.Nonempty.Nonempty 1 [3, 7, 9])
+  in
+    (seed', Just (player, response, Board.addPiece response player board))
 
 
 {-| Heuristic for moving on a board with one piece -}
@@ -70,7 +73,7 @@ heuristicOne : Random.Seed -> Square -> Board -> Piece -> (Random.Seed, Maybe Mo
 heuristicOne seed occupied board player =
   let
     (seed', response) = if occupied == 5 then
-        RandomChoice.fromList seed (List.Nonempty.Nonempty 2 [4, 6, 8])
+        RandomChoice.fromList seed (List.Nonempty.Nonempty 1 [3, 7, 9])
     else
         (seed, 5)
   in
@@ -103,7 +106,7 @@ score : Board -> Piece -> Score
 score board player =
   case Board.hasLine board of
     Just (winner, _) ->
-      if winner == X then 100 else -100
+      (100 - Board.pieceCount winner board) * (if winner == X then 1 else -1)
 
     Nothing ->
       if Board.isFull board then

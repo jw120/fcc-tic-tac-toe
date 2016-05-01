@@ -19,7 +19,7 @@ import Actions
 view : Signal.Address Actions.Action -> Html.Html
 view address =
   Html.div
-    []
+    [ Html.Attributes.class "play-button-box"]
     [ playButton address Actions.StartAsBatsu "Start as X"
     , playButton address Actions.StartAsMaru "Start as O"
     ]

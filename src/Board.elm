@@ -2,7 +2,7 @@ module Board
   ( Square, Piece(..), Board, Line
   , opposite
   , fromList, toList, emptyBoard, isEmpty, isValid
-  , getPiece, isFull, isEmptySquare, hasLine, emptySquares
+  , getPiece, isFull, isEmptySquare, hasLine, emptySquares, pieceCount
   , addPiece
   ) where
 
@@ -23,7 +23,7 @@ squares are numbered from 1 to 9
 @doc fromList, toList, emptyBoard, isEmpty, isValid
 
 # Board examination functions
-@doc getPiece, isFull, hasLine, isEmptySquare, mptySquares
+@doc getPiece, isFull, hasLine, isEmptySquare, emptySquares, pieceCount
 
 # Board manipulation function
 @doc addPiece
@@ -139,6 +139,14 @@ emptySquares : Board -> List Square
 emptySquares board =
   [1 .. 9]
     |> List.filter (\s -> isEmptySquare s board)
+
+
+{-| Number of pieces for the player on the board -}
+pieceCount : Piece -> Board -> Int
+pieceCount player =
+  toList
+    >> List.filter (\(_, piece) -> piece == player)
+    >> List.length
 
 
 -- Board manipulation function

@@ -9,21 +9,19 @@ import Task
 
 import BoardProp
 import BoardTest
---import Game.ScoreTest
---import Game.ScoreProp
+import ComputerTest
 
 allTests : ElmTest.Test
 allTests =
   ElmTest.suite "elm-test unit tests"
     [ BoardTest.allTests
---    , Game.ScoreTest.allTests
+    , ComputerTest.allTests
     ]
 
 allProperties : Check.Claim
 allProperties =
   Check.suite "elm-check properties"
     [ BoardProp.allClaims
---    , Game.ScoreProp.allClaims
     ]
 
 console : Console.IO ()

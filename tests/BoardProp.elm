@@ -97,12 +97,17 @@ emptySquareProperties =
       `for` boardListProducer
     ]
 
--- validate that if lines returned by hasLine are found by isLine
-hasTriggersIs : Board -> Bool
-hasTriggersIs b =
+-- validate thatlines returned by hasLine are lines`
+hasTriggersWithLine : Board -> Bool
+hasTriggersWithLine b =
   case Board.hasLine b of
-    Just (p, l) -> Board.isLine l b == Just p
-    Nothing -> True
+    Just (p, (s1, s2, s3)) ->
+      Board.getPiece s1 b == Just p &&
+      Board.getPiece s2 b == Just p &&
+      Board.getPiece s3 b == Just p
+
+    Nothing ->
+      True
 
 lineProperties : Check.Claim
 lineProperties =
@@ -110,7 +115,7 @@ lineProperties =
     "line properties"
     [ Check.claim
       "hasLine triggers isLine"
-      `that` (Board.fromList >> hasTriggersIs)
+      `that` (Board.fromList >> hasTriggersWithLine)
       `is` always True
       `for` boardListProducer
     ]
