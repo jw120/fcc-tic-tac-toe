@@ -2,9 +2,10 @@ To compile
 
 ```
 elm make src/Main.elm --output elm.js
+./build.sh
 ```
 
-Then open `tic-tac-toe.html`
+Then open `dist/index.html`
 
 
 
